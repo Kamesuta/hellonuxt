@@ -1,8 +1,86 @@
 <template>
   <div>
-    <nuxt />
+    <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+          <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28" />
+        </a>
+
+        <a
+          role="button"
+          class="navbar-burger burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+          v-on:click="expanded = !expanded"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': expanded }">
+        <div class="navbar-start">
+          <a class="navbar-item">{{test.toString()}}</a>
+
+          <a class="navbar-item">Documentation</a>
+
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">More</a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item">About</a>
+              <a class="navbar-item">Jobs</a>
+              <a class="navbar-item">Contact</a>
+              <hr class="navbar-divider" />
+              <a class="navbar-item">Report an issue</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <a class="button is-primary">
+                <strong>Sign up</strong>
+              </a>
+              <a class="button is-light">Log in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div>
+      <nuxt />
+    </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'default_layout',
+  data() {
+    return {
+      expanded: false,
+      test: 114514
+    }
+  },
+  head() {
+    // since nuxt.js uses vue-meta to update the document head and meta attributes
+    // you can also use it for your own good which means adding meta tags or editing
+    // the attributes of a body tag! you can learn more here
+    // https://nuxtjs.org/guide/views/#html-head
+    // or here
+    // https://github.com/declandewet/vue-meta#recognized-metainfo-properties
+    return {
+      bodyAttrs: {
+        class: 'has-navbar-fixed-top'
+      }
+    }
+  }
+}
+</script>
 
 <style>
 html {
