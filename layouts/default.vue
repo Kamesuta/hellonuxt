@@ -22,19 +22,14 @@
 
       <div id="navbarBasicExample" class="navbar-menu" :class="{ 'is-active': expanded }">
         <div class="navbar-start">
-          <a class="navbar-item">{{test.toString()}}</a>
-
-          <a class="navbar-item">Documentation</a>
-
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">More</a>
-
-            <div class="navbar-dropdown">
-              <a class="navbar-item">About</a>
-              <a class="navbar-item">Jobs</a>
-              <a class="navbar-item">Contact</a>
-              <hr class="navbar-divider" />
-              <a class="navbar-item">Report an issue</a>
+          <div class="media" v-if="isLogin">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img :src="user.photoURL">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="is-6">{{user.displayName}}</p>
             </div>
           </div>
         </div>
@@ -42,10 +37,10 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <a class="button is-primary">
-                <strong>Sign up</strong>
+              <a class="button is-primary" v-if="!isLogin" v-on:click="googleLogin()">
+                <strong>Log in</strong>
               </a>
-              <a class="button is-light">Log in</a>
+              <a class="button is-light" v-else v-on:click="logOut()">Log out</a>
             </div>
           </div>
         </div>
@@ -58,12 +53,15 @@
 </template>
 
 <script>
+import firebase from '@/plugins/firebase'
 export default {
   name: 'default_layout',
   data() {
     return {
       expanded: false,
-      test: 114514
+      isWaiting: true,
+      isLogin: false,
+      user: null
     }
   },
   head() {
@@ -77,6 +75,27 @@ export default {
       bodyAttrs: {
         class: 'has-navbar-fixed-top'
       }
+    }
+  },
+  mounted: function() {
+    firebase.auth().onAuthStateChanged((user) => {
+      this.isWaiting = false
+      if (user) {
+        this.isLogin = true
+        this.user = user
+      } else {
+        this.isLogin = false
+        this.user = null
+      }
+    })
+  },
+  methods: {
+    googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithRedirect(provider)
+    },
+    logOut() {
+      firebase.auth().signOut()
     }
   }
 }
